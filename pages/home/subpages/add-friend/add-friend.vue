@@ -40,7 +40,6 @@
 			username: keyword.value
 		}).then(response => {
 			if (response.code === 0) {
-				searchStatus.value = 1
 				store.lookUserInfo = response.user_info
 				uni.navigateTo({
 					url: '/pages/home/subpages/user-detail/user-detail',

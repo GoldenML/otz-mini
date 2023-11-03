@@ -56,7 +56,9 @@
 		});
 	}
 	const toAdd = () => {
-
+		uni.navigateTo({
+			url: '/pages/home/subpages/request-add/request-add',
+		});
 	}
 	const existFriend = ref(false)
 	onMounted(() => {

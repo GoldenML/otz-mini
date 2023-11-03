@@ -23,7 +23,7 @@
 					<!-- #endif -->
 					<view class="list" v-for="(item1, index1) in item" :key="index1">
 						<view @click="enterDetail(item1)" class="list__item">
-							<u-swipe-action>
+							<u-swipe-action :auto-close="true">
 								<u-swipe-action-item :options="options2">
 									<view class="swipe-action u-border-top u-border-bottom">
 										<view class="swipe-action__content">
@@ -121,14 +121,19 @@
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 	.list {
 
 		&__item {
 			@include flex;
 			padding: 6px 12px;
 			align-items: center;
-
+			::v-deep .u-swipe-action{
+				width: 100%
+			}
+			&>view{
+				width: 100%;
+			}
 			&__avatar {
 				height: 35px;
 				width: 35px;
@@ -149,24 +154,29 @@
 			padding: 15px 0;
 		}
 	}
-	
+
 	.u-page {
-	        padding: 0;
-	    }
-	
-	    .u-demo-block__title {
-	        padding: 10px 0 2px 15px;
-	    }
-	
-	    .swipe-action {
-	        &__content {
-	             padding: 25rpx 0;
-	    
-	            &__text {
-	                 font-size: 15px;
-	                 color: $u-main-color;
-	                 padding-left: 30rpx;
-	             }
-	        }
-	    }
+		padding: 0;
+	}
+
+	.u-demo-block__title {
+		padding: 10px 0 2px 15px;
+	}
+	.u-swipe-action{
+		width: 100% !important;
+	}
+
+	.swipe-action {
+		border: none !important;
+
+		&__content {
+			padding: 25rpx 0;
+
+			&__text {
+				font-size: 15px;
+				color: $u-main-color;
+				padding-left: 30rpx;
+			}
+		}
+	}
 </style>

@@ -17,6 +17,9 @@
 									<image @click="clickImg(msg.image_msg.image_url)" mode="widthFix" style="width: 150px"
 										:src="msg.image_msg.image_url" alt=""></image>
 								</view>
+								<view v-else-if="msg.msg_type === 3">
+									<!-- <video :src></video> -->
+								</view>
 								<view v-else class="chat-left__box">
 									{{ msg.text_msg?.text }}
 								</view>
@@ -28,6 +31,9 @@
 								<view v-if="msg.msg_type === 2" class="chat-right__img">
 									<image @click="clickImg(msg.image_msg.image_url)" mode="widthFix" style="width: 150px;"
 										:src="msg.image_msg.image_url" alt=""></image>
+								</view>
+								<view v-else-if="msg.msg_type === 3">
+									<!-- <video :src></video> -->
 								</view>
 								<view v-else class="chat-right__box">
 									{{ msg.text_msg?.text }}
@@ -53,6 +59,9 @@
 								<view v-if="msg.msg_type === 2" class="chat-left__img">
 									<image @click="clickImg(msg.image_msg.image_url)" mode="widthFix" style="width: 150px"
 										:src="msg.image_msg.image_url" alt=""></image>
+								</view>
+								<view v-else-if="msg.msg_type === 3">
+									<!-- <video :src></video> -->
 								</view>
 								<view v-else class="chat-left__box">
 									{{ msg.text_msg?.text }}
@@ -81,7 +90,7 @@
 			</view>
 			<view id="scroll-bottom"></view>
 		</scroll-view>
-		<view class="bottom-content" :style="{height: showMore ? moreHeight + 80 + 'px' : '80px'}">
+		<view class="bottom-content" >
 			<!-- <up-upload :fileList="fileList" @afterRead="afterRead" name="6" multiple :width="30" :height="30">
 				<u-icon name="plus-circle" color="#2979ff" size="28"></u-icon>
 
@@ -89,7 +98,7 @@
 			<u-icon @click="selectFile" name="plus-circle" color="#2979ff" size="28"></u-icon>
 			<view class="content-wrap">
 				<u-textarea v-model="message" height="40" :showConfirmBar="false" :cursorSpacing="20" placeholder="请输入内容"
-					:disableDefaultPadding="true" autoHeight confirm-type="发送"></u-textarea>
+				@linechange="linechange"	:disableDefaultPadding="true" autoHeight confirm-type="发送"></u-textarea>
 			</view>
 			<view class="btn-wrap">
 				<u-button @tap="sendMessage" class="btn" type="success" size="small" @click="handleSend">发送</u-button>
@@ -135,6 +144,15 @@
 			// scrollBottom()
 		})
 	})
+	const linechange = (event) => {
+		let query = wx.createSelectorQuery();
+		query.select('.bottom-content').boundingClientRect(res => {
+			console.log('==== res.height :', res.height);
+			const result = uni.getSystemInfoSync()
+			height.value = result.windowHeight - res.height
+		}).exec();
+		scrollBottom()
+	}
 	onMounted(() => {
 		store.badges[store.operateUsername] = 0
 		if (currentMsg.value.msgList.length > 30) {
@@ -501,10 +519,12 @@
 		display: flex;
 		position: absolute;
 		padding-top: 10px;
-
+		min-height: 80px;
+		overflow: auto;
 		.content-wrap {
 			width: 78%;
 			margin-left: 2%;
+			padding-bottom: 10px;
 		}
 
 		.btn-wrap {

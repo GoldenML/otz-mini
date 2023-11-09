@@ -13,7 +13,7 @@
 				</view>
 				<u-line></u-line>
 			</view>
-			<template :key="index" v-for="(item, index) in itemArr">
+			<template :key="index" v-for="(item, index) in friendList">
 				<!-- #ifdef APP-NVUE -->
 				<u-index-anchor :text="indexList[index]"></u-index-anchor>
 				<!-- #endif -->
@@ -21,20 +21,20 @@
 					<!-- #ifndef APP-NVUE -->
 					<u-index-anchor :text="indexList[index]"></u-index-anchor>
 					<!-- #endif -->
-					<view class="list" v-for="(item1, index1) in item" :key="index1">
-						<view @click="enterDetail(item1)" class="list__item">
-							<u-swipe-action :auto-close="true">
-								<u-swipe-action-item :options="options2">
-									<view class="swipe-action u-border-top u-border-bottom">
-										<view class="swipe-action__content">
-											<text class="swipe-action__content__text">
+					<view class="list" v-for="(item1, index1) in item" :key="item1.username">
+						<view class="list__item">
+							<view>
+								<u-swipe-action :auto-close="true">
+									<u-swipe-action-item @click.stop="execute($event, item1)" :options="options">
+										<view class="swipe-action u-border-top u-border-bottom">
+											<view class="swipe-action__content"  @click.stop="enterDetail(item1)" >
 												<image class="list__item__avatar" :src="item1.avatar"></image>
 												<text class="list__item__user-name">{{item1.nickname}}</text>
-											</text>
+											</view>
 										</view>
-									</view>
-								</u-swipe-action-item>
-							</u-swipe-action>
+									</u-swipe-action-item>
+								</u-swipe-action>
+							</view>
 
 						</view>
 						<u-line></u-line>
@@ -45,6 +45,10 @@
 				<view class="list__footer">共{{store.friendInfos.length}}位好友</view>
 			</view>
 		</u-index-list>
+		<view>
+			<u-modal @confirm="confirm" @cancel="show = false" :showCancelButton="true" :show="show" title="删除"
+				content="删除后无法恢复，确定删除吗？"></u-modal>
+		</view>
 	</view>
 </template>
 
@@ -57,24 +61,43 @@
 	import {
 		userStore
 	} from "@/store/userStore";
+	import {
+		post
+	} from "../../../utils/request";
+	import ApiPath from "../../../common/ApiPath";
+import { getFriendInfos, getUserMsg } from "../../../utils/global";
 	const props = defineProps({
 		tabbarHeight: Number
 	})
-	const options2 = ref([{
-		text: '收藏',
-		style: {
-			backgroundColor: '#3c9cff'
-		}
-	}, {
+	const options = ref([{
 		text: '删除',
 		style: {
 			backgroundColor: '#f56c6c'
 		}
 	}])
 	const store = userStore()
+	const show = ref(false)
+	const deleteFriend = ref(null)
+	const execute = (event, item) => {
+		console.log(event, item);
+		show.value = true
+		deleteFriend.value = item
+	}
+	const confirm = () => {
+		post(ApiPath.USER_DELETE_FRIEND, {
+			friend_username: deleteFriend.value.username
+		}).then(res => {
+			if (res.code === 0) {
+				uni.$u.toast('删除成功');
+				show.value = false
+				getFriendInfos()
+				getUserMsg()
+			}
+		})
+	}
 
 	let categorizedFriends = {}
-	const itemArr = computed(() => {
+	const friendList = computed(() => {
 		return indexList.value.map(item => {
 			const arr = []
 			if (categorizedFriends[item]) {
@@ -121,23 +144,27 @@
 	}
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 	.list {
 
 		&__item {
 			@include flex;
 			padding: 6px 12px;
 			align-items: center;
-			::v-deep .u-swipe-action{
+
+			::v-deep .u-swipe-action {
 				width: 100%
 			}
-			&>view{
+
+			&>view {
 				width: 100%;
 			}
+
 			&__avatar {
 				height: 35px;
 				width: 35px;
 				border-radius: 3px;
+				vertical-align: middle;
 			}
 
 			&__user-name {
@@ -162,7 +189,8 @@
 	.u-demo-block__title {
 		padding: 10px 0 2px 15px;
 	}
-	.u-swipe-action{
+
+	.u-swipe-action {
 		width: 100% !important;
 	}
 
@@ -170,7 +198,7 @@
 		border: none !important;
 
 		&__content {
-			padding: 25rpx 0;
+			padding: 5px 0;
 
 			&__text {
 				font-size: 15px;

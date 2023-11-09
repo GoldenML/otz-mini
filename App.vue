@@ -2,13 +2,19 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			wx.showShareMenu()
 		},
 		onShow: function() {
 			console.log('App Show')
+			wx.showShareMenu()
 		},
 		onHide: function() {
 			console.log('App Hide')
-		}
+		},
+		onShareAppMessage() {
+			
+		},
+		onShareTimeline(){}
 	}
 </script>
 

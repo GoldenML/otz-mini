@@ -8,6 +8,9 @@
 					</template>
 				</u-cell>
 			</u-list-item>
+			<view class="up-safe-area-inset--bottom" :style="{marginBottom: tabbarHeight + 'px'}">
+				<view class="list__footer">共{{store.friendInfos.length}}个群聊</view>
+			</view>
 		</u-list>
 	</view>
 </template>
@@ -44,5 +47,13 @@ import { onMounted } from "vue";
 </script>
 
 <style lang="scss" scoped>
+.list {
 
+		&__footer {
+			color: $u-tips-color;
+			font-size: 14px;
+			text-align: center;
+			padding: 15px 0;
+		}
+	}
 </style>

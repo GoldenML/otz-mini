@@ -3,7 +3,7 @@
 		<u-button @tap="enterAddFriend" size="normal" type="primary">添加新朋友</u-button>
 		<u-list>
 			<u-list-item v-for="(item, index) in store.addHistory" :key="item.work_id">
-				<u-cell @click="enterChatDetail(item.username)" :title="item.peer_user_info.nickname" :label="item.greeting">
+				<u-cell  :title="item.peer_user_info.nickname" :label="item.greeting">
 					<template #icon>
 						<u-avatar shape="square" size="35" :src="item.peer_user_info.avatar"
 							customStyle="margin: -3px 5px -3px 0"></u-avatar>
@@ -14,7 +14,7 @@
 							已发送
 						</view>
 						<view v-if="item.to_username === store.userInfo.username && item.friend_add_status === 1">
-							<u-button tap="acceptRequest" type="success" size="small">接受</u-button>
+							<u-button @tap="acceptRequest(item)" type="success" size="small">接受</u-button>
 						</view>
 					</template>
 				</u-cell>
@@ -44,8 +44,9 @@
 		uni.setNavigationBarTitle({
 			title: '新的朋友'
 		})
+		getAddHistory()
 	})
-	const acceptRequest = () => {
+	const acceptRequest = (v) => {
 		post(ApiPath.USER_ADD_HANDLE, {
 			work_id: v.work_id,
 			add_friend_reply_status: 1

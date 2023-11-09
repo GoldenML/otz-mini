@@ -12,15 +12,18 @@
 
 <script setup>
 	import {
-		onMounted, ref
+		onMounted,
+		ref
 	} from "vue";
 	import ApiPath from "@/common/ApiPath";
 	import {
 		post
 	} from "@/utils/request";
-import { userStore } from "@/store/userStore";
-	const store =userStore()
-	const greeting = ref(0)
+	import {
+		userStore
+	} from "@/store/userStore";
+	const store = userStore()
+	const greeting = ref('')
 	onMounted(() => {
 		uni.setNavigationBarTitle({
 			title: '申请添加朋友'
@@ -32,16 +35,10 @@ import { userStore } from "@/store/userStore";
 			greeting: greeting.value
 		}).then(res => {
 			if (res.code === 0) {
-				proxy.$message({
-					type: 'success',
-					message: '发送成功'
-				})
-				proxy.$emit('close')
-			} else {
-				proxy.$message({
-					type: 'error',
-					message: res.msg
-				})
+				uni.$u.toast('发送成功');
+				setTimeout(() => {
+					uni.navigateBack()
+				}, 500)
 			}
 		})
 	}

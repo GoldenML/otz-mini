@@ -82,6 +82,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/home/subpages/info-update/info-update",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

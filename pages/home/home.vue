@@ -3,7 +3,7 @@
 		<view :style="{height: height + 'px'}">
 			<chat-list :height="height" v-if="value === 0"></chat-list>
 			<staff-list :tabbarHeight="tabbarHeight" v-if="value === 1"></staff-list>
-			<settings v-if="value === 3"></settings>
+			<settings v-if="value === 2"></settings>
 		</view>
 		<view class="tabbar">
 			<u-tabbar ref="tabbarRef" :value="value" @change="name => value = name" :fixed="true" :placeholder="true"
@@ -36,7 +36,7 @@
 	import StaffList from './components/StaffList.vue'
 	import Settings from './components/Settings.vue'
 	const store = userStore()
-	const value = ref(1)
+	const value = ref(0)
 	const tabbarRef = ref(null)
 	const height = ref(0)
 	const tabbarHeight = ref(0)
@@ -52,6 +52,7 @@
 		deep: true
 	})
 	onMounted(() => {
+		wx.showShareMenu()
 		uni.hideHomeButton()
 		connectWs()
 		Promise.all([

@@ -2,7 +2,7 @@
 	<view>
 		<view class="u-page__tag-item">
 			<u-search :show-action="false" placeholder="用户名" v-model="keyword" @change="searchStatus = 0"></u-search>
-			<view v-if="searchStatus === 0" @click="searchUser"
+			<view v-if="keyword && searchStatus === 0" @click="searchUser"
 				style="display: flex; margin-top: 10px; align-items: center;margin-left: 10px;height: 35px;line-height: 35px;background-color: aliceblue;">
 				<view>
 					<u-icon size="30" name='man-add'></u-icon>

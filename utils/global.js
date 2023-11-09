@@ -49,21 +49,25 @@ export const getUserMsg = (first) => {
 						if (msg.from_type === 1 && msg.to_type === 1) {
 							// 如果是朋友给我发送的消息
 							if (userInfo.username === msg.to_username) {
-								// 如果store.badges中存在msg.to_usernam
-								if (store.badges[msg.to_username] || store.badges[msg.to_username] === 0) {
-									store.badges[msg.from_username] = store.badges[msg.from_username] + 1
-								} else {
-									store.badges[msg.from_username] = 1
+								if (store.operateUsername !== msg.from_username) {
+									// 如果store.badges中存在msg.to_usernam
+									if (store.badges[msg.to_username] || store.badges[msg.to_username] === 0) {
+										store.badges[msg.from_username] = store.badges[msg.from_username] + 1
+									} else {
+										store.badges[msg.from_username] = 1
+									}
 								}
 							}
 						} else {
 							// 如果是群聊消息，且非我发送的
 							if (userInfo.username !== msg.from_username) {
-								// 如果store.badges中存在msg.to_usernam
-								if (store.badges[msg.to_username] || store.badges[msg.to_username] === 0) {
-									store.badges[msg.to_username] = store.badges[msg.to_username] + 1
-								} else {
-									store.badges[msg.to_username] = 1
+								if (store.operateUsername !== msg.to_username) {
+									// 如果store.badges中存在msg.to_usernam
+									if (store.badges[msg.to_username] || store.badges[msg.to_username] === 0) {
+										store.badges[msg.to_username] = store.badges[msg.to_username] + 1
+									} else {
+										store.badges[msg.to_username] = 1
+									}
 								}
 							}
 						}

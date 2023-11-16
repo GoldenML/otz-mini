@@ -91,6 +91,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/home/subpages/red-packet/red-packet",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

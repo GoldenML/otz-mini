@@ -2,10 +2,11 @@
 	<view class='user-detail'>
 		<view style="display: flex;padding: 10px 0">
 			<image class="header-avatar" :src="store.lookUserInfo.avatar"></image>
-			<view>
-				<view>昵称：{{store.lookUserInfo.nickname}}</view>
-				<view>用户名：{{store.lookUserInfo.username}}</view>
-				<view>地区：{{area}}</view>
+			<view style="font-size: 14px;">
+				<view>昵称：<u-tooltip bgColor="#999999" :text="store.lookUserInfo.nickname" overlay></u-tooltip></view>
+				
+				<view>用户名：<u-tooltip bgColor="#999999" :text="store.lookUserInfo.username" overlay></u-tooltip></view>
+				<view>地区：<u-tooltip bgColor="#999999" :text="area" overlay></u-tooltip></view>
 			</view>
 		</view>
 		<u-divider></u-divider>

@@ -10,16 +10,27 @@ import moment from 'moment'
 
 const store = userStore()
 export const getFriendInfos = async () => {
-  const res = await post(ApiPath.USER_GET_FRIEND, {})
-  if (res.code === 0) {
-    store.friendInfos = res.friends
-  }
+	const res = await post(ApiPath.USER_GET_FRIEND, {})
+	if (res.code === 0) {
+		store.friendInfos = res.friends
+	}
 }
 export const getAddHistory = async () => {
-  const res = await post(ApiPath.USER_ADD_HISTORY, {})
-  if(res.code === 0) {
-    store.addHistory = res.add_friend_histories
-  }
+	const res = await post(ApiPath.USER_ADD_HISTORY, {})
+	if (res.code === 0) {
+		store.addHistory = res.add_friend_histories
+	}
+}
+export const formatDate = (value, type) => {
+	var date = new Date(Number(value));
+	var month = date.getMonth() + 1;
+	var hours = date.getHours();
+	if (hours < 10)
+		hours = "0" + hours;
+	var minutes = date.getMinutes();
+	if (minutes < 10)
+		minutes = "0" + minutes;
+	return hours + ":" + minutes
 }
 export const getUserMsg = (first) => {
 	const userInfo = store.userInfo
@@ -100,6 +111,24 @@ export const getUserMsg = (first) => {
 					 * from_type 1:用户，2：群，3， 服务号， 4: 群系统消息
 					 * msg_type 1: 文本， 2：图片， 3：文件， 4：表情， 5：红包
 					 */
+					let lastMsg = ''
+					switch (msg_type) {
+						case 1:
+							lastMsg = text_msg.text;
+							break
+						case 2:
+							lastMsg = '[图片]';
+							break
+						case 3:
+							lastMsg = '[文件]';
+							break
+						case 4:
+							lastMsg = '[表情]';
+							break
+						case 5:
+							lastMsg = '[红包]';
+							break
+					}
 					if (from_type === 1 && to_type === 1) {
 						// 如果from_username等于当前用户username,则friendUsername为to_username，否则为from_username
 						const friendUsername = userInfo.username === from_username ? to_username : from_username
@@ -111,7 +140,7 @@ export const getUserMsg = (first) => {
 								// 更改最后一次消息时间
 								msgs[friendUsername].lastTime = timestamp
 								// 更改最后一次消息内容
-								msgs[friendUsername].lastMsg = msg_type === 1 ? text_msg.text : msg_type === 2 ? '[图片]' : ''
+								msgs[friendUsername].lastMsg = lastMsg
 								// 查找用户发送的消息，并将等待状态改为false,注：wait === true 代表消息正在发送中,false表示发送成功
 								const clientMsg = msgs[friendUsername].msgList.find(v => String(v.client_sequence) === String(
 									client_sequence))
@@ -131,7 +160,7 @@ export const getUserMsg = (first) => {
 									type: 1,
 									nickname: friend.nickname,
 									avatar: friend.avatar,
-									lastMsg: msg_type === 1 ? text_msg.text : msg_type === 2 ? '[图片]' : '',
+									lastMsg: lastMsg,
 									username: friendUsername,
 									msgList: [msg],
 									lastTime: timestamp
@@ -146,7 +175,7 @@ export const getUserMsg = (first) => {
 							if (msgs[to_username]) {
 								msgs[to_username].lastTime = timestamp
 								msgs[to_username].lastUsername = from_username
-								msgs[to_username].lastMsg = msg_type === 1 ? text_msg.text : msg_type === 2 ? '[图片]' : ''
+								msgs[to_username].lastMsg = lastMsg
 								const clientMsg = msgs[to_username].msgList.find(v => String(v.client_sequence) === String(
 									client_sequence))
 								if (client_sequence && clientMsg) {
@@ -172,7 +201,7 @@ export const getUserMsg = (first) => {
 									nickname: group.group_name,
 									avatar: group.group_avatar,
 									lastUsername: from_username,
-									lastMsg: msg_type === 1 ? text_msg.text : msg_type === 2 ? '[图片]' : '',
+									lastMsg: lastMsg,
 									username: to_username,
 									lastTime: timestamp,
 									msgList: [msg]

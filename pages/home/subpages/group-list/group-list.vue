@@ -9,7 +9,7 @@
 				</u-cell>
 			</u-list-item>
 			<view class="up-safe-area-inset--bottom" :style="{marginBottom: tabbarHeight + 'px'}">
-				<view class="list__footer">共{{store.friendInfos.length}}个群聊</view>
+				<view class="list__footer">共{{store.groupInfos.length}}个群聊</view>
 			</view>
 		</u-list>
 	</view>

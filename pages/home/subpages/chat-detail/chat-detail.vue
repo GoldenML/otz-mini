@@ -1,7 +1,7 @@
 <template>
 	<view class="chat-detail">
-		<scroll-view @click="showMore = false" :scroll-anchoring="true" @scrolltoupper="scrollTop"
-			:scroll-into-view="toView" scroll-y="true" :style="{height: height + 'px'}">
+		<scroll-view @click="showMore = false" @scrolltoupper="scrollTop" :scroll-into-view="toView" scroll-y="true"
+			:style="{height: height + 'px'}">
 			<view v-if='startIndex !== 0' style="text-align: center;">
 				<up-loadmore :status="status" />
 			</view>
@@ -152,7 +152,6 @@
 			<template v-if="showMore">
 				<u-divider></u-divider>
 				<view class="more">
-
 					<view @click="moreClick(item)" v-for="(item,index) in moreList" :key="index" class="more-item">
 						<view>
 							<u-icon size="30" :name="item.icon"></u-icon>
@@ -164,6 +163,9 @@
 				</view>
 			</template>
 		</view>
+		<u-modal class="red-packet-modal" :show="true" ref="uModal" :asyncClose="true" :showConfirmButton="false">
+			xsx
+		</u-modal>
 	</view>
 </template>
 
@@ -204,14 +206,8 @@
 		icon: 'red-packet-fill'
 	}])
 	watch(showMore, () => {
-		nextTick(() => {
-			let query = wx.createSelectorQuery();
-			query.select('.bottom-content').boundingClientRect(res => {
-				const result = uni.getSystemInfoSync()
-				height.value = result.windowHeight - res.height - keyboardheight.value
-			}).exec();
-			scrollBottom()
-		})
+		console.log('==== showMore.value :', showMore.value);
+		rebuildHeight()
 	})
 	const keyboardheight = ref(0)
 	watch(keyboardheight, (value) => {
@@ -266,7 +262,7 @@
 		toView.value = ''
 		setTimeout(() => {
 			toView.value = 'scroll-bottom'
-		}, 0)
+		}, 100)
 
 	}
 	const currentMsg = computed(() => {
@@ -714,5 +710,13 @@
 	.chat-detail {
 		height: 100vh;
 		// padding-bottom: env(safe-area-inset-bottom);
+		::v-deep .u-modal__content{
+			height: 500px;
+			padding: 0 !important;
+			background-color: rgb(243, 93, 76);
+		}
+		::v-deep .u-line{
+			display: none !important;
+		}
 	}
 </style>

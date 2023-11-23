@@ -6,30 +6,29 @@
 			<u-picker :show="showType" :columns="typeColumns" @cancel="cancel" @confirm="confirm"></u-picker>
 		</view>
 		<view>
-			<u-input v-model="redPacketNum" ref="redPacketNumRef" placeholder="填写红包个数" inputAlign="right" type="number">
+			<up-input v-model="redPacketNum" ref="redPacketNumRef" placeholder="填写红包个数" inputAlign="right" type="number">
 				<template #prefix>红包个数</template>
-			</u-input>
+			</up-input>
 		</view>
 		<view style="margin-top: 10px;">
-			<u-input v-model="money" ref="moneyRef" placeholder="¥0.00" border="surround" inputAlign='right' type="number"
-				@focus="handleMoneyInput">
+			<up-input v-model="money" ref="moneyRef" placeholder="¥0.00" border="surround" inputAlign='right' type="number">
 				<template #prefix>总金额</template>
-			</u-input>
+			</up-input>
 		</view>
 		<view style="margin-top: 10px;">
-			<u-input placeholder="恭喜发财,大吉大利" border="surround" type="number" clearable>
+			<u-input v-model="mark" placeholder="恭喜发财,大吉大利" border="surround" type="number">
 			</u-input>
 		</view>
-		<view style="margin-top: 10px;padding: 10px;height: 26px;border: 1px solid #dadbde;background-color: #ffffff;">
+		<!-- <view style="margin-top: 10px;padding: 10px;height: 26px;border: 1px solid #dadbde;background-color: #ffffff;">
 			<view style="float: left;">
 				红包封面
 			</view>
 			<view>
 				<u-icon name="arrow-right" labelPos="left" size="16"></u-icon>
 			</view>
-		</view>
+		</view> -->
 		<view style="text-align: center; margin-top: 50px;">
-			<view style="font-size: 30px;margin-bottom: 20px;">{{money}}{{money ? money : '¥0.00'}}</view>
+			<view style="font-size: 30px;margin-bottom: 20px;">{{money ? `¥${money}` : '¥0.00'}}</view>
 			<view style="width: 200px;margin: 0 auto;">
 				<u-button @click="sendRedPacket" type="error">塞钱进红包</u-button>
 			</view>
@@ -54,15 +53,16 @@
 	import ApiPath from "@/common/ApiPath";
 	const store = userStore()
 	const moneyRef = ref(null)
-	const money = ref('')
+	const money = ref(null)
 	const redPacketNumRef = ref(null)
-	const redPacketNum = ref()
+	const redPacketNum = ref(null)
+	const mark = ref('恭喜发财,大吉大利')
 	onMounted(() => {
 		uni.setNavigationBarTitle({
 			title: '发红包'
 		})
-		moneyRef.value.setFormatter(formatter)
-		redPacketNumRef.value.setFormatter(formatterNum)
+		// redPacketNumRef.value.setFormatter(formatterNum)
+		// moneyRef.value.setFormatter(formatterMoney)
 	})
 	const packetType = ref('拼手气红包')
 	const showType = ref(false)
@@ -80,15 +80,15 @@
 		money.value = value.replace(/[^\d.]/g, '');
 	}
 	const formatterNum = (value) => {
-		console.log(value, value.replace(/[^0-9]/ig, ""));
-		return value.replace(/[^0-9]/ig, "")
+		redPacketNum.value = value.replace(/[^0-9]/ig, "");
+		return redPacketNum.value
 	}
-	const formatter = (value) => {
-		const real = value.replace(/¥/ig, '').replace(/[^0-9]/ig, "")
-		return real ? `¥${real}` : ''
+	const formatterMoney = (value) => {
+		money.value = value.replace(/¥/ig, '').replace(/[^0-9]/ig, "")
+		return money.value
 	}
 	const sendRedPacket = () => {
-		if (redPacketNum.value === 0) {
+		if (Number(redPacketNum.value) === 0) {
 			uni.showToast({
 				title: "红包个数不能为0",
 				icon: 'none'
@@ -123,12 +123,12 @@
 			client_sequence,
 			formatTime: formatDate(new Date().getTime()),
 			red_packet: {
-				amount: 10000,
-				count: 6,
+				amount: Number(money.value),
+				count: Number(redPacketNum.value),
 				red_packet_type: 1,
 				username: store.userInfo.username,
 				receive_username: '',
-				mark: '恭喜发财',
+				mark: '恭喜发财,大吉大利',
 				cover_url: '',
 				receive_amount: 0
 			}
